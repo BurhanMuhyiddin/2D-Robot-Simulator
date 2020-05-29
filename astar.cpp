@@ -2,7 +2,7 @@
 #include <iostream>
 #include <stdlib.h>
 #include <math.h>
-#include "dijekstra.h"
+#include "myAlgorithms.h"
 
 extern int initialX, initialY, goalX, goalY, gridX, gridY;
 extern int INF;

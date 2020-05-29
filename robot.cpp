@@ -4,6 +4,7 @@
 #include <vector>
 #include "robot.h"
 #include <algorithm>
+#include "myAlgorithms.h"
 
 using namespace std;
 
@@ -179,13 +180,4 @@ void visualizePath()
         optimalPath.push_back(tmp);
     }
     isFull = true;
-}
-
-int* decryptIndex(int encryptedIndex)
-{
-    static int index[] = {0, 0}; // row, col
-    index[1] = (encryptedIndex - (encryptedIndex%gridX))/gridX;
-    index[0] = encryptedIndex - index[1]*gridX;
-
-    return index;
 }

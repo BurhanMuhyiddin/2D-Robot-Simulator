@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
+#include "myAlgorithms.h"
 
 using namespace std;
 
@@ -52,16 +53,6 @@ void dijkstraInit()
 void dijkstra_debug()
 {
 
-    /*for (int i = 0; i < gridY; i++)
-	{
-		for (int j = 0; j < gridX; j++)
-		{
-			cout << parent[i][j] << " ";
-		}
-		cout << endl;
-	}
-
-	cout << endl << endl;*/
 }
 
 void calculateDijkstra()
@@ -136,37 +127,6 @@ void calculateDijkstra()
         }
         distanceFromStart[min_y][min_x] = INF;
     }
-}
-
-int* findMin(int** arr, int row, int col)
-{
-    int temp_min = INF;
-    int min_x, min_y;
-    static int res[3] = {0, 0, 0}; //val, y, x
-
-    for(int i = 0; i < row; i++)
-    {
-        for(int j = 0; j < col; j++)
-        {
-            int temp = arr[i][j];
-            if(temp < temp_min)
-            {
-                temp_min = temp;
-                min_y = i;
-                min_x = j;
-            }
-        }
-    }
-    res[0] = temp_min;
-    res[1] = min_y;
-    res[2] = min_x;
-
-    return res;
-}
-
-int encryptIndex(int row, int col)
-{
-    return row*1 + col*gridX;
 }
 
 void dijkstraFreeParameters()
