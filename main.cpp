@@ -2,7 +2,8 @@
 #include <GL/glut.h>
 #include <iostream>
 #include "robot.h"
-#include "dijekstra.h"
+//#include "dijekstra.h"
+#include "astar.h"
 
 using namespace std;
 
@@ -60,21 +61,28 @@ int main(int argc, char** argv)
 
     return 0;
 }
+
 int cnt = 0;
+
 void display_callback()
 {
-    dijkstraInit();
+    astarInit();
+    //dijkstraInit();
     glClear(GL_COLOR_BUFFER_BIT);
     drawGrid();
     drawBarrier(mouseX, mouseY);
     drawGoalPosition(goalX, goalY);
-    calculateDijkstra();
+    //dijkstra_debug();
+    astarCalculate();
+    //calculateDijkstra();
     visualizePath();
     if(isRobotMove)
     {
         drawRobot();
     }
-    dijkstraFreeParameters();
+    astarFreeParameters();
+    //dijkstra_debug();
+    //dijkstraFreeParameters();
     glutSwapBuffers();
 }
 

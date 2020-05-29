@@ -189,4 +189,3 @@ int* decryptIndex(int encryptedIndex)
 
     return index;
 }
-
