@@ -6,24 +6,17 @@ using namespace std;
 
 // !!!Warning: change robotX and robotY to startX and startY, because as robot moves the coordinates will change
 
+int INF = 999999;
+
 extern int robotX, robotY, goalX, goalY, gridX, gridY;;
 extern int** map_;
 extern int** costMap_;
 extern int** distanceFromStart;
-extern int* parentX;
-extern int* parentY;
-extern vector< vector <int> > optimalPath;
+extern int** parent;
 
 void dijkstra_debug()
 {
-    /*for(int i = 0; i < gridY; i++)
-    {
-        for(int j = 0; j < gridX; j++)
-        {
-            cout << distanceFromStart[i][j] << " ";
-        }
-        cout << endl;
-    }*/
+
 }
 
 void calculateDijkstra()
@@ -35,14 +28,12 @@ void calculateDijkstra()
         int min_y = min_node[1];
         int min_node_val = min_node[0];
 
-        //cout << min_x << "  " << min_y << endl;
-
-        if((min_x == goalX && min_y == goalY) || min_node_val == INF)
+        if((min_x == goalX && min_y == goalY) || (min_node_val == INF))
         {
             break;
         }
 
-        if(min_x != robotX && min_y != robotY)
+        if(min_x != robotX || min_y != robotY)
         {
             map_[min_y][min_x] = 3;
         }
@@ -51,17 +42,11 @@ void calculateDijkstra()
         {
             if(map_[min_y][min_x-1] != 2 && map_[min_y][min_x-1] != 3 && map_[min_y][min_x-1] != 5)
             {
-                int t = (distanceFromStart[min_y][min_x] + costMap_[min_y][min_x-1]);
+                int t = distanceFromStart[min_y][min_x] + costMap_[min_y][min_x-1];
                 if(t < distanceFromStart[min_y][min_x-1])
                 {
                     distanceFromStart[min_y][min_x-1] = t;
-                    // parent[gridY][gridX-1] = gridY, gridX;
-                    //parentX[min_x-1] = min_x;
-                    //parentY[min_y] = min_y;
-                    vector<int> tmp;
-                    tmp.push_back(min_x);
-                    tmp.push_back(min_y);
-                    optimalPath.push_back(tmp);
+                    parent[min_y][min_x-1] = encryptIndex(min_y, min_x);
                 }
             }
         }
@@ -74,18 +59,12 @@ void calculateDijkstra()
                 if(t < distanceFromStart[min_y-1][min_x])
                 {
                     distanceFromStart[min_y-1][min_x] = t;
-                    // parent[gridY-1][gridX] = gridY, gridX;
-                    //parentX[min_x] = min_x;
-                    //parentY[min_y-1] = min_y;
-                    vector<int> tmp;
-                    tmp.push_back(min_x);
-                    tmp.push_back(min_y);
-                    optimalPath.push_back(tmp);
+                    parent[min_y-1][min_x] = encryptIndex(min_y, min_x);
                 }
             }
         }
 
-        if(min_x != gridX-1)
+        if(min_x != gridX-2)
         {
             if(map_[min_y][min_x+1] != 2 && map_[min_y][min_x+1] != 3 && map_[min_y][min_x+1] != 5)
             {
@@ -93,18 +72,12 @@ void calculateDijkstra()
                 if(t < distanceFromStart[min_y][min_x+1])
                 {
                     distanceFromStart[min_y][min_x+1] = t;
-                    // parent[gridY][gridX+1] = gridY, gridX;
-                    //parentX[min_x+1] = min_x;
-                    //parentY[min_y] = min_y;
-                    vector<int> tmp;
-                    tmp.push_back(min_x);
-                    tmp.push_back(min_y);
-                    optimalPath.push_back(tmp);
+                    parent[min_y][min_x+1] = encryptIndex(min_y, min_x);
                 }
             }
         }
 
-        if(min_y != gridY-1)
+        if(min_y != gridY-2)
         {
             if(map_[min_y+1][min_x] != 2 && map_[min_y+1][min_x] != 3 && map_[min_y+1][min_x] != 5)
             {
@@ -112,13 +85,7 @@ void calculateDijkstra()
                 if(t < distanceFromStart[min_y+1][min_x])
                 {
                     distanceFromStart[min_y+1][min_x] = t;
-                    // parent[gridY+1][gridX] = gridY, gridX;
-                    //parentX[min_x] = min_x;
-                    //parentY[min_y+1] = min_y;
-                    vector<int> tmp;
-                    tmp.push_back(min_x);
-                    tmp.push_back(min_y);
-                    optimalPath.push_back(tmp);
+                    parent[min_y+1][min_x] = encryptIndex(min_y, min_x);
                 }
             }
         }
@@ -128,7 +95,7 @@ void calculateDijkstra()
 
 int* findMin(int** arr, int row, int col)
 {
-    int temp_min = 999;
+    int temp_min = INF;
     int min_x, min_y;
     static int res[3] = {0, 0, 0}; //val, y, x
 
@@ -145,10 +112,14 @@ int* findMin(int** arr, int row, int col)
             }
         }
     }
-    //cout << temp_min << "   " << min_y << "    " << min_x << endl;
     res[0] = temp_min;
     res[1] = min_y;
     res[2] = min_x;
 
     return res;
+}
+
+int encryptIndex(int row, int col)
+{
+    return row*1 + col*gridX;
 }

@@ -8,17 +8,17 @@
 using namespace std;
 
 int gridX, gridY;
-int goalX = 5, goalY = 10;
-int robotX = 20, robotY = 20;
+int goalX = 10, goalY = 10;
+int robotX = 30, robotY = 30;
 int WINDOW_W = 500, WINDOW_H = 500;
 int** map_;
 int** costMap_;
 int** distanceFromStart;
-int* parentX;
-int* parentY;
+int** parent;
+
+extern int INF;
 
 vector< vector <int> > barrierCoordinates;
-vector< vector <int> > optimalPath;
 
 /***************
 
@@ -38,45 +38,32 @@ void initGrid(int x, int y)
     map_ = new int*[gridY];
     costMap_ = new int*[gridY];
     distanceFromStart = new int*[gridY];
-    parentX = new int[gridX];
-    parentY = new int[gridY];
+    parent = new int*[gridY];
+
     for(int i = 0; i < gridX; i++)
     {
         map_[i] = new int[gridX];
         costMap_[i] = new int[gridX];
         distanceFromStart[i] = new int[gridX];
-    }
-
-    for(int i = 0; i < gridY; i++)
-    {
-        parentY[i] = -1;
-    }
-
-    for(int i = 0; i < gridX; i++)
-    {
-        parentX[i] = -1;
+        parent[i] = new int[gridX];
     }
 
     for(int i = 0; i < gridY; i++)
     {
         for(int j = 0; j < gridX; j++)
         {
-            map_[i][j] = 1;
+            if(i == (gridY-1) || j == (gridX-1) || i == 0 || j == 0)
+                map_[i][j] = 2;
+            else
+                map_[i][j] = 1;
             costMap_[i][j] = abs(robotX - j) + abs(robotY - i);
             distanceFromStart[i][j] = INF;
+            parent[i][j] = 0;
         }
     }
     map_[robotY][robotX] = 5;
     map_[goalY][goalX] = 6;
     distanceFromStart[robotY][robotX] = 0;
-    /*for(int i = 0; i < gridY; i++)
-    {
-        for(int j = 0; j < gridX; j++)
-        {
-            cout << distanceFromStart[i][j] << " ";
-        }
-        cout << endl;
-    }*/
 }
 
 void drawGrid()
@@ -165,7 +152,31 @@ void clearBarriers()
     barrierCoordinates.clear();
 }
 
-/*void visualizePath()
+int counter = 0;
+
+void visualizePath()
 {
-    if()
-}*/
+    glColor3f(1.0, 1.0, 0.0);
+    int node = parent[goalY][goalX];
+
+    while(node != 0)
+    {
+        int* decryptedNodeIndex = decryptIndex(node);
+        int x = decryptedNodeIndex[1];
+        int y = decryptedNodeIndex[0];
+
+        node = parent[y][x];
+
+        if(node != 0)   glRecti(x, y, x+1, y+1);
+    }
+}
+
+int* decryptIndex(int encryptedIndex)
+{
+    static int index[] = {0, 0}; // row, col
+    index[1] = (encryptedIndex - (encryptedIndex%gridX))/gridX;
+    index[0] = encryptedIndex - index[1]*gridX;
+
+    return index;
+}
+

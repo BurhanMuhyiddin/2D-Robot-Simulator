@@ -1,8 +1,6 @@
 #ifndef ROBOT_H_INCLUDED
 #define ROBOT_H_INCLUDED
 
-#define INF 999
-
 void initGrid(int, int);
 void drawGrid();
 void unit(int, int);
@@ -12,5 +10,7 @@ void clearBarriers();
 void drawGoalPosition(int, int);
 void drawRobot();
 void dijkstra_debug();
+void visualizePath();
+int* decryptIndex(int);
 
 #endif // ROBOT_H_INCLUDED

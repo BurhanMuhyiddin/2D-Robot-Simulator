@@ -13,7 +13,7 @@ using namespace std;
 #define ROWS        40
 #define FPS         10
 // End of Define statements
-
+int count = 0;
 // Extern variables
 
 // End of extern variables
@@ -37,7 +37,7 @@ void init()
 {
     glClearColor(0.0, 0.0, 0.0, 1.0);
     initGrid(COLUMNS, ROWS);
-    dijkstra_debug();
+    //dijkstra_debug();
 }
 
 
@@ -67,6 +67,10 @@ void display_callback()
     drawGoalPosition(goalX, goalY);
     drawRobot();
     calculateDijkstra();
+    visualizePath();
+    //if(count == 0)
+    //   dijkstra_debug();
+    //count++;
     glutSwapBuffers();
 }
 
