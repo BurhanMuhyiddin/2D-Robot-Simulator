@@ -1,10 +1,9 @@
 # depslib dependency file v1.0
-1590744685 source:e:\myfolder\c course\2drobot\robot.cpp
+1590757821 source:e:\myfolder\c course\2drobot\robot.cpp
 	<GL/gl.h>
 	<GL/glut.h>
 	<iostream>
 	<vector>
-	<math.h>
 	"robot.h"
 	<algorithm>
 
@@ -234,19 +233,20 @@
 
 1590741826 e:\myfolder\c course\2drobot\robot.h
 
-1590744929 source:e:\myfolder\c course\2drobot\main.cpp
+1590757203 source:e:\myfolder\c course\2drobot\main.cpp
 	<GL/gl.h>
 	<GL/glut.h>
 	<iostream>
 	"robot.h"
 	"dijekstra.h"
 
-1590743152 source:e:\myfolder\c course\2drobot\dijekstra.cpp
+1590756530 source:e:\myfolder\c course\2drobot\dijekstra.cpp
 	"dijekstra.h"
 	<iostream>
 	<vector>
+	<stdlib.h>
 
-1590742062 e:\myfolder\c course\2drobot\dijekstra.h
+1590755747 e:\myfolder\c course\2drobot\dijekstra.h
 
 1341006774 c:\program files (x86)\codeblocks\mingw\include\math.h
 	<_mingw.h>

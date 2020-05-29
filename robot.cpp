@@ -2,7 +2,6 @@
 #include <GL/glut.h>
 #include <iostream>
 #include <vector>
-#include <math.h>
 #include "robot.h"
 #include <algorithm>
 
@@ -43,36 +42,6 @@ void initGrid(int x, int y)
 
     initialX = robotX;
     initialY = robotY;
-
-    map_ = new int*[gridY];
-    costMap_ = new int*[gridY];
-    distanceFromStart = new int*[gridY];
-    parent = new int*[gridY];
-
-    for(int i = 0; i < gridX; i++)
-    {
-        map_[i] = new int[gridX];
-        costMap_[i] = new int[gridX];
-        distanceFromStart[i] = new int[gridX];
-        parent[i] = new int[gridX];
-    }
-
-    for(int i = 0; i < gridY; i++)
-    {
-        for(int j = 0; j < gridX; j++)
-        {
-            if(i == (gridY-1) || j == (gridX-1) || i == 0 || j == 0)
-                map_[i][j] = 2;
-            else
-                map_[i][j] = 1;
-            costMap_[i][j] = abs(initialX - j) + abs(initialY - i);
-            distanceFromStart[i][j] = INF;
-            parent[i][j] = 0;
-        }
-    }
-    map_[initialY][initialX] = 5;
-    map_[goalY][goalX] = 6;
-    distanceFromStart[initialY][initialX] = 0;
 }
 
 void drawGrid()
@@ -124,6 +93,7 @@ void drawBarrier(int x, int y)
     glColor3f(1.0, 0.0, 0.0);
     for(int i = 0; i < barrierCoordinates.size(); i++)
     {
+        map_[barrierCoordinates[i][1]][barrierCoordinates[i][0]] = 2;
         glRecti(barrierCoordinates[i][0], barrierCoordinates[i][1],
                 barrierCoordinates[i][0]+1, barrierCoordinates[i][1]+1);
     }
@@ -155,7 +125,8 @@ void drawRobot()
     robotX = optimalPath[counter][0];
     robotY = optimalPath[counter][1];
 
-    if(counter != optimalPath.size()-1)      counter++;
+    if(optimalPath.size() == 0)     counter = 0;
+    else if(counter != optimalPath.size()-1)      counter++;
 
     glRecti(robotX, robotY, robotX+1, robotY+1);
 }
@@ -174,6 +145,9 @@ void visualizePath()
 {
     glColor3f(1.0, 1.0, 0.0);
     int node = parent[goalY][goalX];
+
+    optimalPath.clear();
+    isFull = false;
 
     while(node != 0)
     {

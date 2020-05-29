@@ -20,8 +20,10 @@ using namespace std;
 
 // Global variables
 int isGoalSet = 0;
+bool isRobotMove = false;
 int mouseX = 0, mouseY = 0;
 extern int goalX, goalY;
+extern int counter;
 // End of global variables
 
 // Callbacks
@@ -58,16 +60,21 @@ int main(int argc, char** argv)
 
     return 0;
 }
-
+int cnt = 0;
 void display_callback()
 {
+    dijkstraInit();
     glClear(GL_COLOR_BUFFER_BIT);
     drawGrid();
     drawBarrier(mouseX, mouseY);
     drawGoalPosition(goalX, goalY);
     calculateDijkstra();
     visualizePath();
-    drawRobot();
+    if(isRobotMove)
+    {
+        drawRobot();
+    }
+    dijkstraFreeParameters();
     glutSwapBuffers();
 }
 
@@ -113,6 +120,9 @@ void keyboard_callback(unsigned char inp, int x, int y)
         break;
     case 'g':
         isGoalSet = 1;
+        break;
+    case 'm':
+        isRobotMove = true;
         break;
     }
 }

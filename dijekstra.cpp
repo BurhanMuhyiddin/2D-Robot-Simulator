@@ -1,6 +1,7 @@
 #include "dijekstra.h"
 #include <iostream>
 #include <vector>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -14,8 +15,52 @@ extern int** costMap_;
 extern int** distanceFromStart;
 extern int** parent;
 
+void dijkstraInit()
+{
+    map_ = new int*[gridY];
+    costMap_ = new int*[gridY];
+    distanceFromStart = new int*[gridY];
+    parent = new int*[gridY];
+
+    for(int i = 0; i < gridX; i++)
+    {
+        map_[i] = new int[gridX];
+        costMap_[i] = new int[gridX];
+        distanceFromStart[i] = new int[gridX];
+        parent[i] = new int[gridX];
+    }
+
+    for(int i = 0; i < gridY; i++)
+    {
+        for(int j = 0; j < gridX; j++)
+        {
+            if(i == (gridY-1) || j == (gridX-1) || i == 0 || j == 0)
+                map_[i][j] = 2;
+            else
+                map_[i][j] = 1;
+            costMap_[i][j] = abs(initialX - j) + abs(initialY - i);
+            distanceFromStart[i][j] = INF;
+            parent[i][j] = 0;
+        }
+    }
+    map_[initialY][initialX] = 5;
+    map_[goalY][goalX] = 6;
+    distanceFromStart[initialY][initialX] = 0;
+}
+
 void dijkstra_debug()
 {
+
+    for (int i = 0; i < gridY; i++)
+	{
+		for (int j = 0; j < gridX; j++)
+		{
+			cout << map_[i][j] << " ";
+		}
+		cout << endl;
+	}
+
+	cout << endl << endl;
 
 }
 
@@ -122,4 +167,12 @@ int* findMin(int** arr, int row, int col)
 int encryptIndex(int row, int col)
 {
     return row*1 + col*gridX;
+}
+
+void dijkstraFreeParameters()
+{
+    delete[] map_;
+    delete[] costMap_;
+    delete[] distanceFromStart;
+    delete[] parent;
 }
