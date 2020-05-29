@@ -13,7 +13,7 @@ using namespace std;
 #define ROWS        40
 #define FPS         10
 // End of Define statements
-int count = 0;
+
 // Extern variables
 
 // End of extern variables
@@ -65,12 +65,9 @@ void display_callback()
     drawGrid();
     drawBarrier(mouseX, mouseY);
     drawGoalPosition(goalX, goalY);
-    drawRobot();
     calculateDijkstra();
     visualizePath();
-    //if(count == 0)
-    //   dijkstra_debug();
-    //count++;
+    drawRobot();
     glutSwapBuffers();
 }
 

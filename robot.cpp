@@ -4,21 +4,27 @@
 #include <vector>
 #include <math.h>
 #include "robot.h"
+#include <algorithm>
 
 using namespace std;
 
 int gridX, gridY;
-int goalX = 10, goalY = 10;
-int robotX = 30, robotY = 30;
+int initialX = 0, initialY = 0;
+int goalX = 35, goalY = 35;
+int robotX = 3, robotY = 3;
 int WINDOW_W = 500, WINDOW_H = 500;
+bool isFull = false;
 int** map_;
 int** costMap_;
 int** distanceFromStart;
 int** parent;
 
+int counter = 0;
+
 extern int INF;
 
 vector< vector <int> > barrierCoordinates;
+vector< vector <int> > optimalPath;
 
 /***************
 
@@ -34,6 +40,9 @@ void initGrid(int x, int y)
 {
     gridX = x;
     gridY = y;
+
+    initialX = robotX;
+    initialY = robotY;
 
     map_ = new int*[gridY];
     costMap_ = new int*[gridY];
@@ -56,14 +65,14 @@ void initGrid(int x, int y)
                 map_[i][j] = 2;
             else
                 map_[i][j] = 1;
-            costMap_[i][j] = abs(robotX - j) + abs(robotY - i);
+            costMap_[i][j] = abs(initialX - j) + abs(initialY - i);
             distanceFromStart[i][j] = INF;
             parent[i][j] = 0;
         }
     }
-    map_[robotY][robotX] = 5;
+    map_[initialY][initialX] = 5;
     map_[goalY][goalX] = 6;
-    distanceFromStart[robotY][robotX] = 0;
+    distanceFromStart[initialY][initialX] = 0;
 }
 
 void drawGrid()
@@ -131,15 +140,24 @@ void drawGoalPosition(int x, int y)
 
     glColor3f(0.0, 1.0, 0.0);
     glRecti(nX, nY, nX+1, nY+1);
+
+    nX = initialX;
+    nY = initialY;
+
+    glColor3f(0.0, 1.0, 1.0);
+    glRecti(nX, nY, nX+1, nY+1);
 }
 
 void drawRobot()
 {
     glColor3f(0.0, 0.0, 1.0);
+
+    robotX = optimalPath[counter][0];
+    robotY = optimalPath[counter][1];
+
+    if(counter != optimalPath.size()-1)      counter++;
+
     glRecti(robotX, robotY, robotX+1, robotY+1);
-    //robotX++;
-    //if(robotX == gridX - 1)     robotX = 1;
-    //if(robotY == gridY - 1)     robotY = 1;
 }
 
 int mapValues(int x, int in_min, int in_max, int out_min, int out_max)
@@ -152,8 +170,6 @@ void clearBarriers()
     barrierCoordinates.clear();
 }
 
-int counter = 0;
-
 void visualizePath()
 {
     glColor3f(1.0, 1.0, 0.0);
@@ -165,10 +181,30 @@ void visualizePath()
         int x = decryptedNodeIndex[1];
         int y = decryptedNodeIndex[0];
 
+        if(!isFull)
+        {
+            vector<int> tmp;
+            tmp.push_back(x);
+            tmp.push_back(y);
+            optimalPath.push_back(tmp);
+        }
+
         node = parent[y][x];
 
-        if(node != 0)   glRecti(x, y, x+1, y+1);
+        if(node != 0)
+        {
+            glRecti(x, y, x+1, y+1);
+        }
     }
+    if(!isFull)
+    {
+        reverse(optimalPath.begin(), optimalPath.end());
+        vector<int> tmp;
+        tmp.push_back(goalX);
+        tmp.push_back(goalY);
+        optimalPath.push_back(tmp);
+    }
+    isFull = true;
 }
 
 int* decryptIndex(int encryptedIndex)

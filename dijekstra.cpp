@@ -4,11 +4,11 @@
 
 using namespace std;
 
-// !!!Warning: change robotX and robotY to startX and startY, because as robot moves the coordinates will change
+// !!!Warning: change initialX and initialY to startX and startY, because as robot moves the coordinates will change
 
 int INF = 999999;
 
-extern int robotX, robotY, goalX, goalY, gridX, gridY;;
+extern int initialX, initialY, goalX, goalY, gridX, gridY;;
 extern int** map_;
 extern int** costMap_;
 extern int** distanceFromStart;
@@ -33,7 +33,7 @@ void calculateDijkstra()
             break;
         }
 
-        if(min_x != robotX || min_y != robotY)
+        if(min_x != initialX || min_y != initialY)
         {
             map_[min_y][min_x] = 3;
         }
